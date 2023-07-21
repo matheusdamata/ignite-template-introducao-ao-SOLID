@@ -1,13 +1,24 @@
-import { Response, Request } from "express";
+/* eslint-disable no-useless-constructor */
+import { Response, Request } from 'express'
 
-import { CreateUserUseCase } from "./CreateUserUseCase";
+import { CreateUserUseCase } from './CreateUserUseCase'
 
 class CreateUserController {
   constructor(private createUserUseCase: CreateUserUseCase) {}
 
-  handle(request: Request, response: Response): Response {
-    // Complete aqui
+  handle(req: Request, res: Response): Response {
+    const { name, email } = req.body
+
+    try {
+      const user = this.createUserUseCase.execute({ name, email })
+
+      return res.status(201).json(user)
+    } catch (error) {
+      return res.status(400).json({
+        error: error.message,
+      })
+    }
   }
 }
 
-export { CreateUserController };
+export { CreateUserController }
